@@ -9,18 +9,6 @@ const GAMES = {
 		game: <TicTacToeApp />,
 		label: "Tic Tac Toe",
 	},
-	tictactoe2: {
-		game: <TicTacToeApp />,
-		label: "Tic Tac Toe",
-	},
-	tictactoe3: {
-		game: <TicTacToeApp />,
-		label: "Tic Tac Toe",
-	},
-	tictactoe4: {
-		game: <TicTacToeApp />,
-		label: "Tic Tac Toe",
-	},
 };
 
 export default function Home() {
