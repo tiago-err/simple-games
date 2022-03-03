@@ -6,7 +6,7 @@ import {mdiArrowLeft} from "@mdi/js";
 
 const GAMES = {
 	tictactoe: {
-		game: <TicTacToeApp />,
+		game: <TicTacToeApp database={process.env.REACT_APP_TICTACTOE_DB || "tictactoe_game"} />,
 		label: "Tic Tac Toe",
 	},
 };

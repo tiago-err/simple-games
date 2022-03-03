@@ -7,7 +7,7 @@ import Icon from "@mdi/react";
 import {mdiLoading} from "@mdi/js";
 import {shareMove} from "./services/shareService";
 
-export function TicTacToeApp() {
+export function TicTacToeApp(props: {database: string}) {
 	const [gameId, setGameId] = useState<string | undefined>(undefined);
 	const [lastMove, setLastMove] = useState<string | null>(null);
 	const [isLoading, setLoading] = useState(true);
@@ -96,7 +96,7 @@ export function TicTacToeApp() {
 			players: [] as string[],
 		};
 
-		const {data, error} = await supabase.from<ITicTacToe>("tictactoe_game").insert([game]);
+		const {data, error} = await supabase.from<ITicTacToe>(props.database).insert([game]);
 		if (!error && data) {
 			setGameId(data[0].id);
 			setLastMove(data[0].last_move);
@@ -110,7 +110,7 @@ export function TicTacToeApp() {
 
 	useEffect(() => {
 		async function getGameFromId(id: string) {
-			const {data, error} = await supabase.from<ITicTacToe>("tictactoe_game").select("*").match({id}).single();
+			const {data, error} = await supabase.from<ITicTacToe>(props.database).select("*").match({id}).single();
 			if (error) throw error;
 			return data;
 		}
@@ -153,7 +153,7 @@ export function TicTacToeApp() {
 
 	function updateGame(matrix: string[][], lastMove: string | null) {
 		supabase
-			.from<ITicTacToe>("tictactoe_game")
+			.from<ITicTacToe>(props.database)
 			.update({matrix, last_move: lastMove})
 			.match({id: gameId})
 			.then(({data, error}) => {
