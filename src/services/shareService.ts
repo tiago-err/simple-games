@@ -10,8 +10,8 @@ const printHelper = {
 
 const shareMessages = {
 	move: "I've made my move.\nWhat's yours?\n",
-	win: "Game over!\nWant to play again?",
-	draw: "It's a tie!\nWant to play again?",
+	win: "Game over!\nWant to play again?\n",
+	draw: "It's a tie!\nWant to play again?\n",
 };
 
 function printMatrix(matrix: string[][]) {
