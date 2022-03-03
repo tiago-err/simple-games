@@ -13,7 +13,7 @@ function App() {
 	const [isLoading, setLoading] = useState(true);
 	const [loadingTransition, setLoadingTransition] = useState(false);
 	const [finishMessage, setFinishMessage] = useState<
-		{message: string; showShare: boolean; showRestart: boolean; type: "move" | "win" | "draw"} | undefined
+		{message: string; showShare: boolean; showRestart: boolean; type: "move" | "win" | "draw"; matrix: string[][]} | undefined
 	>(undefined);
 	const [finishTransition, setFinishTransition] = useState(false);
 	const [matrix, setMatrix] = useState<string[][]>([
@@ -33,8 +33,8 @@ function App() {
 					showShare: true,
 					showRestart: true,
 					type: "win",
+					matrix,
 				});
-				setMatrix(matrix);
 			}, 1000);
 		}
 
@@ -48,8 +48,8 @@ function App() {
 					showShare: true,
 					showRestart: false,
 					type: "move",
+					matrix,
 				});
-				setMatrix(matrix);
 			}, 1000);
 		}
 
@@ -63,8 +63,8 @@ function App() {
 					showShare: true,
 					showRestart: true,
 					type: "draw",
+					matrix,
 				});
-				setMatrix(matrix);
 			}, 1000);
 		}
 
@@ -198,7 +198,7 @@ function App() {
 							<button
 								className="bg-sky-500 text-white px-4 py-3 rounded-lg"
 								onClick={() => {
-									shareMove(matrix, finishMessage.type);
+									shareMove(finishMessage.matrix, finishMessage.type);
 								}}>
 								Share
 							</button>
