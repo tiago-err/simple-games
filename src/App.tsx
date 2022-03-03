@@ -12,7 +12,9 @@ function App() {
 	const [lastMove, setLastMove] = useState<string | null>(null);
 	const [isLoading, setLoading] = useState(true);
 	const [loadingTransition, setLoadingTransition] = useState(false);
-	const [finishMessage, setFinishMessage] = useState<{message: string; showShare: boolean; showRestart: boolean} | undefined>(undefined);
+	const [finishMessage, setFinishMessage] = useState<
+		{message: string; showShare: boolean; showRestart: boolean; type: "move" | "win" | "draw"} | undefined
+	>(undefined);
 	const [finishTransition, setFinishTransition] = useState(false);
 	const [matrix, setMatrix] = useState<string[][]>([
 		["0", "0", "0"],
@@ -26,7 +28,12 @@ function App() {
 
 			setFinishTransition(true);
 			setTimeout(() => {
-				setFinishMessage({message: `${winner} has won!. Would you like to start another game?`, showShare: true, showRestart: true});
+				setFinishMessage({
+					message: `${winner} has won!. Would you like to start another game?`,
+					showShare: true,
+					showRestart: true,
+					type: "win",
+				});
 				setMatrix(matrix);
 			}, 1000);
 		}
@@ -40,6 +47,7 @@ function App() {
 					message: "You've made your move!.Share this with your friend so they can make theirs!",
 					showShare: true,
 					showRestart: false,
+					type: "move",
 				});
 				setMatrix(matrix);
 			}, 1000);
@@ -54,6 +62,7 @@ function App() {
 					message: "You've stumbled upon a draw!.Would you like to start another game?",
 					showShare: true,
 					showRestart: true,
+					type: "draw",
 				});
 				setMatrix(matrix);
 			}, 1000);
@@ -189,7 +198,7 @@ function App() {
 							<button
 								className="bg-sky-500 text-white px-4 py-3 rounded-lg"
 								onClick={() => {
-									shareMove(matrix);
+									shareMove(matrix, finishMessage.type);
 								}}>
 								Share
 							</button>
