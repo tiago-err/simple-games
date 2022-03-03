@@ -7,7 +7,7 @@ import Icon from "@mdi/react";
 import {mdiLoading} from "@mdi/js";
 import {shareMove} from "./services/shareService";
 
-function App() {
+export function TicTacToeApp() {
 	const [gameId, setGameId] = useState<string | undefined>(undefined);
 	const [lastMove, setLastMove] = useState<string | null>(null);
 	const [isLoading, setLoading] = useState(true);
@@ -81,7 +81,7 @@ function App() {
 	useEffect(() => {
 		setTimeout(() => {
 			setLoading(loadingTransition);
-		});
+		}, 500);
 	}, [loadingTransition]);
 
 	async function createNewGame() {
@@ -102,7 +102,7 @@ function App() {
 			setLastMove(data[0].last_move);
 			setMatrix(data[0].matrix);
 
-			window.location.search = `?gid=${data[0].id}`;
+			window.location.search = `?g=tictactoe&gid=${data[0].id}`;
 		} else {
 			throw error;
 		}
@@ -165,14 +165,14 @@ function App() {
 
 	return (
 		<div className="w-full h-screen flex justify-center items-center bg-black">
-			{!isLoading && !finishMessage && (
-				<motion.div initial={{opacity: 0}} animate={{opacity: finishTransition ? 0 : 1}}>
-					<TicTacToe matrix={matrix} lastMove={lastMove} gameUpdater={updateGame} />
-				</motion.div>
-			)}
 			{isLoading && (
 				<motion.div className="animate-spin">
 					<Icon path={mdiLoading} color="white" size={4} />
+				</motion.div>
+			)}
+			{!isLoading && !finishTransition && (
+				<motion.div initial={{opacity: 0}} animate={{opacity: finishTransition ? 0 : 1}}>
+					<TicTacToe matrix={matrix} lastMove={lastMove} gameUpdater={updateGame} />
 				</motion.div>
 			)}
 			{!isLoading && finishMessage && (
@@ -209,5 +209,3 @@ function App() {
 		</div>
 	);
 }
-
-export default App;
