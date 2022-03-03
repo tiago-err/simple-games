@@ -18,7 +18,6 @@ export default function TicTacToe(props: {
 
 	useEffect(() => {
 		const result = checkWinningConditions(matrix);
-		console.log(matrix, result);
 		if (result.length > 0) {
 			setWinningPositions(result);
 			setTimeout(() => {
@@ -26,12 +25,10 @@ export default function TicTacToe(props: {
 			}, 1000);
 		} else {
 			if (matrix.every((line) => line.every((item) => item !== "0"))) {
-				console.log("YUP 1");
 				setTimeout(() => {
 					document.dispatchEvent(new CustomEvent("finish-draw", {detail: {matrix}}));
 				}, 1000);
 			} else if (!allowClick) {
-				console.log("YUP 2");
 				setTimeout(() => {
 					document.dispatchEvent(new CustomEvent("finish-move", {detail: {matrix}}));
 				}, 1000);
