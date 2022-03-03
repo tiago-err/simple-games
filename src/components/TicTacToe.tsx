@@ -25,10 +25,10 @@ export default function TicTacToe(props: {
 			}, 1000);
 		} else {
 			if (matrix.every((line) => line.every((item) => item !== "0"))) {
-				setAllowClick(false);
 				setTimeout(() => {
 					document.dispatchEvent(new CustomEvent("finish-draw", {detail: {matrix}}));
 				}, 1000);
+				setAllowClick(false);
 			} else if (!allowClick) {
 				setTimeout(() => {
 					document.dispatchEvent(new CustomEvent("finish-move", {detail: {matrix}}));
