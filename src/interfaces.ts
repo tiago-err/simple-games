@@ -1,7 +1,6 @@
-export interface ITicTacToe {
+export interface IMatrixGame {
 	id: string;
 	created_at: Date;
 	last_move: string | null;
-	players: string[];
 	matrix: string[][];
 }

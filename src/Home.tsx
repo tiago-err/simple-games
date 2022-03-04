@@ -1,12 +1,12 @@
 import {useEffect, useState} from "react";
-import {TicTacToeApp} from "./pages/TicTacToeApp";
 import {motion} from "framer-motion";
 import Icon from "@mdi/react";
 import {mdiArrowLeft} from "@mdi/js";
+import {MatrixTurns} from "./pages/MatrixTurns";
 
 const GAMES = {
 	tictactoe: {
-		game: <TicTacToeApp database={process.env.REACT_APP_TICTACTOE_DB || "tictactoe_game"} />,
+		game: <MatrixTurns database={process.env.REACT_APP_TICTACTOE_DB || "tictactoe_game"} gameType="tictactoe" matrixSize={[3, 3]} />,
 		label: "Tic Tac Toe",
 	},
 };

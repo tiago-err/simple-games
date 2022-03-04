@@ -1,13 +1,27 @@
-import React, {useEffect, useState} from "react";
 import TicTacToe from "../components/TicTacToe";
-import {ITicTacToe} from "../interfaces";
 import {supabase} from "../services/supabaseClient";
+import {IMatrixGame} from "../interfaces";
+import {useEffect, useState} from "react";
 import {motion} from "framer-motion";
 import Icon from "@mdi/react";
 import {mdiLoading} from "@mdi/js";
 import {shareMove} from "../services/shareService";
 
-export function TicTacToeApp(props: {database: string}) {
+function getMatrixTurnGame(
+	gameType: string,
+	props: {matrix: string[][]; lastMove: string | null; gameUpdater: (matrix: string[][], lastMove: string | null) => void},
+) {
+	switch (gameType) {
+		case "tictactoe":
+			return <TicTacToe {...props} />;
+	}
+}
+
+function generateDefaulMatrix(lines: number, columns: number) {
+	return new Array(lines).fill(new Array(columns).fill("0"));
+}
+
+export function MatrixTurns(props: {database: string; matrixSize: number[]; gameType: string}) {
 	const [gameId, setGameId] = useState<string | undefined>(undefined);
 	const [lastMove, setLastMove] = useState<string | null>(null);
 	const [isLoading, setLoading] = useState(true);
@@ -16,11 +30,26 @@ export function TicTacToeApp(props: {database: string}) {
 		{message: string; showShare: boolean; showRestart: boolean; type: "move" | "win" | "draw"; matrix: string[][]} | undefined
 	>(undefined);
 	const [finishTransition, setFinishTransition] = useState(false);
-	const [matrix, setMatrix] = useState<string[][]>([
-		["0", "0", "0"],
-		["0", "0", "0"],
-		["0", "0", "0"],
-	]);
+	const [matrix, setMatrix] = useState<string[][]>(generateDefaulMatrix(props.matrixSize[0], props.matrixSize[1]));
+
+	async function createNewGame() {
+		const game = {
+			id: Math.floor(Math.random() * Math.pow(10, 10)).toString(),
+			last_move: undefined,
+			matrix: generateDefaulMatrix(props.matrixSize[0], props.matrixSize[1]),
+		};
+
+		const {data, error} = await supabase.from<IMatrixGame>(props.database).insert([game]);
+		if (!error && data) {
+			setGameId(data[0].id);
+			setLastMove(data[0].last_move);
+			setMatrix(data[0].matrix);
+
+			window.location.search = `?g=tictactoe&gid=${data[0].id}`;
+		} else {
+			throw error;
+		}
+	}
 
 	useEffect(() => {
 		function finishGame(e: CustomEvent) {
@@ -79,38 +108,8 @@ export function TicTacToeApp(props: {database: string}) {
 	}, []);
 
 	useEffect(() => {
-		setTimeout(() => {
-			setLoading(loadingTransition);
-		}, 500);
-	}, [loadingTransition]);
-
-	async function createNewGame() {
-		const game = {
-			id: Math.floor(Math.random() * Math.pow(10, 10)).toString(),
-			last_move: undefined,
-			matrix: [
-				["0", "0", "0"],
-				["0", "0", "0"],
-				["0", "0", "0"],
-			],
-			players: [] as string[],
-		};
-
-		const {data, error} = await supabase.from<ITicTacToe>(props.database).insert([game]);
-		if (!error && data) {
-			setGameId(data[0].id);
-			setLastMove(data[0].last_move);
-			setMatrix(data[0].matrix);
-
-			window.location.search = `?g=tictactoe&gid=${data[0].id}`;
-		} else {
-			throw error;
-		}
-	}
-
-	useEffect(() => {
 		async function getGameFromId(id: string) {
-			const {data, error} = await supabase.from<ITicTacToe>(props.database).select("*").match({id}).single();
+			const {data, error} = await supabase.from<IMatrixGame>(props.database).select("*").match({id}).single();
 			if (error) throw error;
 			return data;
 		}
@@ -149,11 +148,19 @@ export function TicTacToeApp(props: {database: string}) {
 				.catch((error) => console.error(error, error.message))
 				.finally(() => setLoadingTransition(false));
 		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		setTimeout(() => {
+			setLoading(loadingTransition);
+		}, 500);
+	}, [loadingTransition]);
 
 	function updateGame(matrix: string[][], lastMove: string | null) {
 		supabase
-			.from<ITicTacToe>(props.database)
+			.from<IMatrixGame>(props.database)
 			.update({matrix, last_move: lastMove})
 			.match({id: gameId})
 			.then(({data, error}) => {
@@ -172,7 +179,7 @@ export function TicTacToeApp(props: {database: string}) {
 			)}
 			{!isLoading && !finishTransition && (
 				<motion.div initial={{opacity: 0}} animate={{opacity: finishTransition ? 0 : 1}}>
-					<TicTacToe matrix={matrix} lastMove={lastMove} gameUpdater={updateGame} />
+					{getMatrixTurnGame(props.gameType, {matrix, lastMove, gameUpdater: updateGame})}
 				</motion.div>
 			)}
 			{!isLoading && finishMessage && (
