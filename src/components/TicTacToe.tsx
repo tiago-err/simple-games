@@ -105,8 +105,8 @@ export default function TicTacToe(props: {
 		<div className="flex flex-col justify-center items-center  text-white">
 			{lastMove && (
 				<div className="flex flex-col text-center absolute top-6 text-xl font-medium">
-					<span>Last Move:</span>
-					<span>{lastMove}</span>
+					<span>Your Move:</span>
+					<span>{lastMove === "X" ? "O" : "X"}</span>
 				</div>
 			)}
 			{matrix.map((line, lineIndex) => (

@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
-import TicTacToe from "./components/TicTacToe";
-import {ITicTacToe} from "./interfaces";
-import {supabase} from "./services/supabaseClient";
+import TicTacToe from "../components/TicTacToe";
+import {ITicTacToe} from "../interfaces";
+import {supabase} from "../services/supabaseClient";
 import {motion} from "framer-motion";
 import Icon from "@mdi/react";
 import {mdiLoading} from "@mdi/js";
-import {shareMove} from "./services/shareService";
+import {shareMove} from "../services/shareService";
 
 export function TicTacToeApp(props: {database: string}) {
 	const [gameId, setGameId] = useState<string | undefined>(undefined);

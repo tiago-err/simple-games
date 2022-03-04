@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {TicTacToeApp} from "./TicTacToeApp";
+import {TicTacToeApp} from "./pages/TicTacToeApp";
 import {motion} from "framer-motion";
 import Icon from "@mdi/react";
 import {mdiArrowLeft} from "@mdi/js";
